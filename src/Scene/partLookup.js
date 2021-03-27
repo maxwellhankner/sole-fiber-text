@@ -1,4 +1,4 @@
-const partLookup = (value) => {
+export const partLookup = (value) => {
   switch (value) {
     case 255:
       return 4;
@@ -56,5 +56,3 @@ const partLookup = (value) => {
     default:
   }
 };
-
-export default partLookup;
