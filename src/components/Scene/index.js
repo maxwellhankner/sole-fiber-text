@@ -6,7 +6,7 @@ import { useGLTF, OrbitControls } from '@react-three/drei';
 import { TextureLoader } from 'three/src/loaders/TextureLoader.js';
 import { partLookup } from './partLookup';
 
-function Shoe({ texture, right }) {
+function Shoe({ texture, right, setPart, setShoe }) {
   const group = useRef();
   const { nodes } = useGLTF('/af1-right.gltf');
   const aoMap = useLoader(
@@ -25,20 +25,45 @@ function Shoe({ texture, right }) {
     textureCanvasCTX.drawImage(img, 0, 0, 1000, 1000);
   };
 
-  const clickShoe = (e) => {
+  let x;
+  let y;
+  const pointerDown = (e) => {
     e.stopPropagation();
+    x = e.clientX;
+    y = e.clientY;
+  };
+
+  const pointerUp = (e) => {
+    e.stopPropagation();
+    if (
+      e.clientX > x - 5 &&
+      e.clientX < x + 5 &&
+      e.clientY > y - 5 &&
+      e.clientY < y + 5
+    ) {
+      clickShoe(e);
+    }
+  };
+
+  const clickShoe = (e) => {
     if (e.delta < 10) {
       const x = Math.floor(e.uv.x * 1000);
       const y = Math.floor(e.uv.y * 1000);
       const colorValues = textureCanvas
         .getContext('2d')
         .getImageData(x, y, 1, 1).data;
-      console.log(partLookup(colorValues[0]));
+      setPart(partLookup(colorValues[0]));
+      setShoe(right ? 'right' : 'left');
     }
   };
 
   return (
-    <group ref={group} dispose={null} onClick={(e) => clickShoe(e)}>
+    <group
+      ref={group}
+      dispose={null}
+      onPointerDown={(e) => pointerDown(e)}
+      onPointerUp={(e) => pointerUp(e)}
+    >
       <mesh
         geometry={nodes.af1.geometry}
         rotation={[Math.PI / 2, 0, Math.PI / 2]}
@@ -51,7 +76,7 @@ function Shoe({ texture, right }) {
   );
 }
 
-function Scene({ textureLeft, textureRight }) {
+function Scene({ textureLeft, textureRight, setPart, setShoe }) {
   return (
     <Canvas
       camera={{ position: [0, 0, 7], fov: 45 }}
@@ -60,8 +85,13 @@ function Scene({ textureLeft, textureRight }) {
     >
       <ambientLight />
       <Suspense fallback={null}>
-        <Shoe texture={textureLeft} />
-        <Shoe texture={textureRight} right />
+        <Shoe texture={textureLeft} setPart={setPart} setShoe={setShoe} />
+        <Shoe
+          texture={textureRight}
+          setPart={setPart}
+          setShoe={setShoe}
+          right
+        />
       </Suspense>
       <OrbitControls
         minPolarAngle={Math.PI / 4}
