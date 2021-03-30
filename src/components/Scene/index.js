@@ -1,5 +1,5 @@
 import React, { useRef, Suspense } from 'react';
-import { Canvas, useLoader } from 'react-three-fiber';
+import { Canvas, useLoader } from '@react-three/fiber';
 import { useGLTF, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { partLookup } from './partLookup';
@@ -85,11 +85,7 @@ function Scene({
   visibility,
 }) {
   return (
-    <Canvas
-      camera={{ position: [0, 0, 9], fov: 45 }}
-      colorManagement={false}
-      pixelRatio={3}
-    >
+    <Canvas camera={{ position: [0, 0, 9], fov: 45 }} linear dpr={3}>
       <ambientLight />
       <Suspense fallback={null}>
         {visibility.right && (
