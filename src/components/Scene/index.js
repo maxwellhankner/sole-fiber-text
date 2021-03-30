@@ -1,16 +1,14 @@
 import React, { useRef, Suspense } from 'react';
 import { Canvas, useLoader } from 'react-three-fiber';
 import { useGLTF, OrbitControls } from '@react-three/drei';
-// import * as THREE from 'three';
-// import { TextureLoader } from 'three/examples/jsm/loaders/TextureLoader';
-import { TextureLoader } from 'three/src/loaders/TextureLoader.js';
+import * as THREE from 'three';
 import { partLookup } from './partLookup';
 
-function Shoe({ texture, right, setPart, setShoe }) {
+function Shoe({ texture, right, setPart, setCurrentShoe, alone }) {
   const group = useRef();
   const { nodes } = useGLTF('/af1-right.gltf');
   const aoMap = useLoader(
-    TextureLoader,
+    THREE.TextureLoader,
     `af1-${right ? 'right' : 'left'}-ao.jpg`
   );
   aoMap.flipY = false;
@@ -52,8 +50,11 @@ function Shoe({ texture, right, setPart, setShoe }) {
       const colorValues = textureCanvas
         .getContext('2d')
         .getImageData(x, y, 1, 1).data;
-      setPart(partLookup(colorValues[0]));
-      setShoe(right ? 'right' : 'left');
+      const part = partLookup(colorValues[0]);
+      if (part || part === 0) {
+        setPart(part);
+        setCurrentShoe(right ? 'right' : 'left');
+      }
     }
   };
 
@@ -67,7 +68,7 @@ function Shoe({ texture, right, setPart, setShoe }) {
       <mesh
         geometry={nodes.af1.geometry}
         rotation={[Math.PI / 2, 0, Math.PI / 2]}
-        position={[0, -1, right ? 1.3 : -1.3]}
+        position={[0, -1, alone ? 0 : right ? 1.3 : -1.3]}
         scale={[right ? 0.35 : -0.35, 0.35, 0.35]}
       >
         <meshStandardMaterial aoMap={aoMap} map={texture} />
@@ -76,28 +77,44 @@ function Shoe({ texture, right, setPart, setShoe }) {
   );
 }
 
-function Scene({ textureLeft, textureRight, setPart, setShoe }) {
+function Scene({
+  textureLeft,
+  textureRight,
+  setPart,
+  setCurrentShoe,
+  visibility,
+}) {
   return (
     <Canvas
-      camera={{ position: [0, 0, 7], fov: 45 }}
+      camera={{ position: [0, 0, 9], fov: 45 }}
       colorManagement={false}
-      pixelRatio={2}
+      pixelRatio={3}
     >
       <ambientLight />
       <Suspense fallback={null}>
-        <Shoe texture={textureLeft} setPart={setPart} setShoe={setShoe} />
-        <Shoe
-          texture={textureRight}
-          setPart={setPart}
-          setShoe={setShoe}
-          right
-        />
+        {visibility.right && (
+          <Shoe
+            right
+            texture={textureRight}
+            setPart={setPart}
+            setCurrentShoe={setCurrentShoe}
+            alone={!visibility.left}
+          />
+        )}
+        {visibility.left && (
+          <Shoe
+            texture={textureLeft}
+            setPart={setPart}
+            setCurrentShoe={setCurrentShoe}
+            alone={!visibility.right}
+          />
+        )}
       </Suspense>
       <OrbitControls
         minPolarAngle={Math.PI / 4}
         maxPolarAngle={(Math.PI * 3) / 4}
-        minDistance={2}
-        maxDistance={10}
+        minDistance={4}
+        maxDistance={12}
         enablePan={false}
       />
     </Canvas>

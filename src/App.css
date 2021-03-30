@@ -2,3 +2,18 @@
   height: 100%;
   background-color: #ffffff;
 }
+
+.link-button {
+  width: 100%;
+  max-width: 200px;
+  color: white;
+  background-color: #434343;
+  border: none;
+  border-radius: 5px;
+  margin-left: 15px;
+  padding: 10px;
+}
+
+.basic-text {
+  margin-left: 15px;
+}

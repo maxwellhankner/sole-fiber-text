@@ -1,0 +1,93 @@
+.landing-container {
+  background-color: #f9f9f9;
+  height: 100%;
+}
+
+.landing-header {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 22px;
+  color: #f9f9f9;
+  background-color: #000000;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.landing-header p {
+  margin: 0;
+}
+
+.landing-header a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.landing-content {
+  width: 100%;
+  max-width: 700px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+.featured-designs-container {
+  margin-top: 8px;
+  margin-bottom: 32px;
+  width: 100%;
+}
+.feature-designs {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 5px;
+}
+
+.landing-section-label {
+  font-family: 'Poppins', 'Roboto', 'Ariel';
+  margin: 0px;
+  margin-left: 16px;
+  margin-bottom: 8px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* ALice Carousel */
+.alice-carousel__dots {
+  margin-top: 15px !important;
+}
+
+.alice-carousel__dots-item:not(.custom).__active {
+  background-color: #000000 !important;
+}
+
+.alice-carousel__dots-item:not(.custom) {
+  background-color: #999999 !important;
+}
+
+.alice-carousel__prev-btn {
+  display: none !important;
+}
+
+.alice-carousel__next-btn {
+  display: none !important;
+}
+
+/* Mobile */
+@media screen and (max-width: 700px) {
+  .feature-designs::-webkit-scrollbar {
+    display: none;
+  }
+  .alice-carousel__dots {
+    display: none !important;
+  }
+  .alice-carousel__prev-btn {
+    display: none !important;
+  }
+  .alice-carousel__next-btn {
+    display: none !important;
+  }
+}
